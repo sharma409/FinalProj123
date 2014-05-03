@@ -3,9 +3,9 @@ clc;clear all
 [X, fs] = wavread('data/Ani225.wav');
 X = X';sound(X,fs);
 %%
-X = resample(X',1,2);
-X = X';
-fs = fs/2;
+% X = resample(X',1,2);
+% X = X';
+% fs = fs/2;
 sound(X,fs)
 %% Transform the shit
 wlen = 1024;
@@ -13,8 +13,8 @@ h = wlen/4;
 nfft = wlen;
 
 % perform time-frequency analysis and resynthesis of the original signal
-[stft1, f, t] = stft(X(1,:), wlen, h, nfft, fs);
-[stft2, f, t] = stft(X(2,:), wlen, h, nfft, fs);
+[stft1, ~, ~] = stft(X(1,:), wlen, h, nfft, fs);
+[stft2, f, t] = stft(X(2,:), wlen, h, nfft, fsa);
 figure;
 imagesc(abs(flipud(stft1)))
 figure;

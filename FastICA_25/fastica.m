@@ -243,7 +243,7 @@ interactivePCA    = 'off';
 
 % Default values for 'fpica' parameters
 approach          = 'defl';
-numOfIC           = 10;
+numOfIC           = Dim;
 g                 = 'pow3';
 finetune          = 'off';
 a1                = 1;

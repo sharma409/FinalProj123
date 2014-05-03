@@ -1,0 +1,42 @@
+%% Pull in the song
+clc;clear all
+[X, fs] = wavread('data/Ani441.wav');
+X = X';sound(X,fs);
+%% Transform it to determine the right set of BP filters
+myevenbetterspectrogram(X(1,:),512,fs)
+sound(X,fs)
+%% BP filter every 100 Hz
+h = fir1(512,400/(fs/2));
+% X_f = zeros(2*(fs/2)/100 - 2, size(X,2)); 
+X_f = zeros(50, size(X,2)); 
+X_f(1:2,:) = fftfilt(h,X')'; % This should really be return len(x + h) - 1
+%%
+idx = 3;
+f0 = 150/(fs/2);
+fc = 1000;
+i = 1;
+while idx <= size(X_f,1)  
+    lowBand = (f0 + fc/(fs/2)*i -(fc/2/(fs/2)));
+    highBand = (f0 + fc/(fs/2)*i + (fc/2/(fs/2)));
+    if lowBand < 0 || highBand > 1
+        display('Some off by one issues')
+        keyboard;
+    end
+    h_b = fir1(512,[lowBand highBand]);
+    X_f(idx:idx+1,:) = fftfilt(h_b,X')';
+    idx = idx + 2;
+    i = i + 1; 
+end
+
+%%
+i = 
+sound(X_f(i,:),fs)
+%%
+sigs = fastica([X;X_f],'numOfIc',20);
+% sigs = bsxfun(@rdivide,sigs,max(sigs,[],2));
+
+%%
+i = 20
+sound(sigs(i,:),fs)
+%%
+spectrogram(X(1,:))
